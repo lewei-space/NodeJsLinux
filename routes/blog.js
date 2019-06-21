@@ -1,17 +1,27 @@
+const {getList, getDetail} = require('../controller/blog')
+const {SucceccModel, ErrorModel} = require('../model/resModule')
+
 const handBlogRouter = (req, res) => {
   const method = req.method
 
   // 获取博客列表
   if (method === 'GET' && req.path === '/api/blog/list') {
-    return {
-      msg: '这是博客列表'
-    }
+    const author = req.query.author || ''
+    const keyWord = req.query.keyWord || ''
+    const listData = getList(author, keyWord)
+
+    return new SucceccModel(listData)
+
   }
+
+
   // 获取博客详情
   if (method === 'GET' && req.path === '/api/blog/detail') {
-    return {
-      msg: '这是博客详情'
-    }
+    const id = req.query.id || ''
+    const detailData = getDetail(id)
+
+    return new SucceccModel(detailData)
+
   }
   // 新建一偏博客
   if (method === 'POST' && req.path === '/api/blog/new') {
@@ -21,5 +31,5 @@ const handBlogRouter = (req, res) => {
   }
 }
 
-module.exports=handBlogRouter
+module.exports = handBlogRouter
 
