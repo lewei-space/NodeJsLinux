@@ -1,9 +1,20 @@
+const {
+  loginLe
+} = require('../controller/user')
+
 const HandleUserRouter = (req, res) => {
   const method = req.method;
-
   if (method === 'POST' && req.path === '/api/user/login') {
-    return {
-      msg: '这是登陆接口'
+
+    console.log(req)
+
+    const {username, password} = req.body
+
+    const result = loginLe(req.body.username, req.body.password)
+    if (result) {
+      return true
+    } else {
+      return false
     }
   }
 }
