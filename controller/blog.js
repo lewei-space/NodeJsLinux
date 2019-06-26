@@ -1,71 +1,81 @@
-const mysqlExec =require('../dataBases/mysql')
+const {mysqlExec} = require('../dataBases/mysql')
 
 const getList = (author, keyWord) => {
-  // 数据 假数据
-  return [
-    {
-      id: 1,
-      title: 'biaoti1',
-      content: 'content1',
-      createTime: '2018-09-20',
-      author: 'lele1'
-    },
-    {
-      id: 2,
-      title: 'biaoti2',
-      content: 'content2',
-      createTime: '2018-09-20',
-      author: 'lele2'
-    },
-    {
-      id: 3,
-      title: 'biaoti3',
-      content: 'content1',
-      createTime: '2018-09-20',
-      author: 'lele3'
-    },
-    {
-      id: 4,
-      title: 'biaoti4',
-      content: 'content4',
-      createTime: '2018-09-20',
-      author: 'lele1'
-    }
-  ]
+  // 1=1 永远成立 它的意义在于 解决防止他两个（author、keyword）
+  //  没有值的时候报错
+
+  let sql = `select * from blogs where 1=1 `
+  if (author) {
+    sql += `and author='${author}' `
+  }
+  if (keyWord) {
+    sql += `and title like '%${keyWord}%' `
+  }
+
+  sql += `order by createtime desc ; `
+  console.log('sql' + sql)
+
+  // 返回的是一个promise
+  return mysqlExec(sql)
 }
 
 const getDetail = (id) => {
-  return [
-    {
-      id: 5,
-      title: 'biaoti4',
-      content: 'content4',
-      createTime: '2018-09-20',
-      author: 'lele1'
-    }
-  ]
+
+  const sql = `select * from blogs where id='${id}' `
+
+  return mysqlExec(sql).then(rows => {
+    return rows[0]
+  })
 }
 
 const newBlog = (blogData = {}) => {
+
+  const title = blogData.title
+  const content = blogData.content
+  const author = blogData.author
+  const createtime = blogData.createtime
+
+  const sql = `
+  insert into blogs (title,content,author,createtime) 
+  values('${title}','${content}','${author}',${createtime}); `
+
   // blogData 是一个博客对象，包含title content 属性
   console.log(blogData)
-  return {
-    id: 3 //新建插入到博客里面的id
-  }
+  return mysqlExec(sql).then(insertData => {
+    console.log(insertData)
+    return {
+      id: insertData.insertId
+    }
+  })
 }
 
 const updateBlog = (id, blogData = {}) => {
-  // id 博客id
-  // blogData 是一个博客对象，包含title和blogdata
-  console.log(id, blogData)
-  return true
+
+  const title = blogData.title
+  const content = blogData.content
+  const sql = `update blogs set title='${title}' , content='${content}' where id='${id}';`
+
+  return mysqlExec(sql).then(updateData => {
+    console.log(updateData)
+    if (updateData.affectedRows > 0) {
+      return true
+    }
+    return false
+  })
+
 }
 
-const deleteBlog = (id) => {
-  // id 博客id
-  // blogData 是一个博客对象，包含title 和 blogdata
-  console.log('id'+id)
-  return {id}
+const deleteBlog = (id, author) => {
+   // 加上author 保证删除的安全
+  const sql = `delete from blogs where id='${id}' and author='${author}'; `
+  return mysqlExec(sql).then(deleteData => {
+
+      if (deleteData.affectedRows > 0) {
+        return true
+      }
+      return false
+    }
+  )
 }
 
 module.exports = {

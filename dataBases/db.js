@@ -12,7 +12,7 @@ if (env === 'dev') {
   }
 }
 
-if (env === 'prod') {
+if (env === 'production') {
   DATABASE_CONFIG = {
     host: 'localhost',
     user: 'root',

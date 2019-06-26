@@ -1,18 +1,22 @@
+const mysql=require('mysql')
+const { DATABASE_CONFIG }= require('./db')
 
-const DATABASE_CONFIG=require('db')
-const mysql = require('mysql')
+
 //创建链接对象
-const con=mysql.createConnection(DATABASE_CONFIG)
+const con = mysql.createConnection(DATABASE_CONFIG)
+
 // 开始链接
 con.connect()
 
 // 统一执行sql 函数
 function mysqlExec(sql) {
-  const promise=new Promise((resolve,reject)=>{
-    con.query(sql,(err,result)=>{
-      if (err){
-       reject(err);
-       return
+  console.log('444')
+  const promise = new Promise((resolve, reject) => {
+    con.query(sql, (err, result) => {
+      console.log(JSON.stringify(err)+'err')
+      if (err) {
+        reject(err);
+        return
       }
       resolve(result)
     })
@@ -20,6 +24,6 @@ function mysqlExec(sql) {
   return promise
 }
 
-module.exports={
+module.exports = {
   mysqlExec
 }

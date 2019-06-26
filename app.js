@@ -33,7 +33,6 @@ const getPostData = (req) => {
 }
 
 const serverhanDle = (req, res) => {
-  console.log('111')
   // 获取path
   req.path = req.url.split('?')[0]
   // 设置返回格式
@@ -44,16 +43,18 @@ const serverhanDle = (req, res) => {
   getPostData(req).then(postData => {
     req.body = postData
     // 处理blog路由
-    const handBlogData = handleBlogRouter(req, res)
-    if (handBlogData) {
-      res.end(
-        JSON.stringify(handBlogData)
-      )
+    const blogResult = handleBlogRouter(req, res)
+    if (blogResult) {
+      blogResult.then(blogData => {
+        res.end(
+          JSON.stringify(blogData)
+        )
+      })
       return
     }
+
     // 处理用户路由
     const handUserData = handleUserRouter(req, res)
-    console.log('handUserData' + JSON.stringify(handUserData))
     if (handUserData) {
       res.end(
         JSON.stringify(handUserData)
