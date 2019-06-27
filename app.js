@@ -1,6 +1,6 @@
 const handleBlogRouter = require('./routes/blog')
 const handleUserRouter = require('./routes/user')
-const querstring = require('querystring')
+const QueryString = require('querystring')
 
 // 处理 postData
 const getPostData = (req) => {
@@ -38,10 +38,11 @@ const serverhanDle = (req, res) => {
   // 设置返回格式
   res.setHeader('content-type', 'application/json')
   // 解析 query
-  req.query = querstring.parse(req.url.split('?')[1])
+  req.query = QueryString.parse(req.url.split('?')[1])
   // 处理postdata
   getPostData(req).then(postData => {
     req.body = postData
+
     // 处理blog路由
     const blogResult = handleBlogRouter(req, res)
     if (blogResult) {
@@ -54,18 +55,16 @@ const serverhanDle = (req, res) => {
     }
 
     // 处理用户路由
-    const handUserData = handleUserRouter(req, res)
-    if (handUserData) {
-      res.end(
-        JSON.stringify(handUserData)
-      )
-      return
-    } else {
-      res.end(
-        JSON.stringify('返回false')
-      )
+    const userResult = handleUserRouter(req, res)
+    if (userResult) {
+      userResult.then(userData => {
+        res.end(
+          JSON.stringify(userData)
+        )
+      })
       return
     }
+
 
     // 404
     res.writeHead(404, {

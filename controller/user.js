@@ -1,12 +1,18 @@
-const loginLe = (username,password)=>{
-  // 假数据
+const {mysqlExec} = require('../dataBases/mysql')
 
-  console.log('username')
+const loginLe = (username, password) => {
 
-  if (username === "lele" && password ==="123") {
-    return true
-  }
-  return false
+  console.log(username,password)
+
+  const sql = `select username,realname from users where username='${username}' and password='${password}'; `
+  return mysqlExec(sql).then(rows => {
+    console.log('sql:'+JSON.stringify(rows))
+
+    return rows[0] || {}
+
+  })
 }
 
-module.exports = { loginLe }
+module.exports = {
+  loginLe
+}
