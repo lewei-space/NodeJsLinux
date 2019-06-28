@@ -39,6 +39,21 @@ const serverhanDle = (req, res) => {
   res.setHeader('content-type', 'application/json')
   // 解析 query
   req.query = QueryString.parse(req.url.split('?')[1])
+
+  //解析cookie
+  req.cookie={}
+  const cookieStr=req.headers.cookie || ''
+  cookieStr.split(';').forEach(item=>{
+    if (!item){
+      return
+    }
+    const arr=item.split('=')
+    const key=arr[0]
+    const val=arr[1]
+    req.cookie[key]=val
+  })
+
+  console.log(req.cookie)
   // 处理postdata
   getPostData(req).then(postData => {
     req.body = postData
