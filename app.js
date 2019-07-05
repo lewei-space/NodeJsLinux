@@ -85,13 +85,12 @@ const serverhanDle = (req, res) => {
 
     // 处理blog路由
     const blogResult = handleBlogRouter(req, res)
+
     if (blogResult) {
-
-      if (needSetCookie){
-        res.setHeader('Set-Cookie',`userid=${userId};path=/;httpOnly;expires=${getCookieExpires()}`)
-      }
-
       blogResult.then(blogData => {
+        if (needSetCookie){
+          res.setHeader('Set-Cookie', `userid=${userId};path=/;httpOnly;expires=${getCookieExpires()}`)
+        }
         res.end(
           JSON.stringify(blogData)
         )
@@ -102,18 +101,18 @@ const serverhanDle = (req, res) => {
     // 处理用户路由
     const userResult = handleUserRouter(req, res)
     if (userResult) {
-      if (needSetCookie){
-        res.setHeader('Set-Cookie',`userid=${userId};path=/;httpOnly;expires=${getCookieExpires()}`)
-      }
       userResult.then(userData => {
+
+        if (needSetCookie){
+          res.setHeader('Set-Cookie',`userid=${userId};path=/;httpOnly;expires=${getCookieExpires()}`)
+        }
+
         res.end(
           JSON.stringify(userData)
         )
       })
       return
     }
-
-
     // 404
     res.writeHead(404, {
       "Content-type": "text/plain"

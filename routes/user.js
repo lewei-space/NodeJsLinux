@@ -10,11 +10,10 @@ const getCookieExpires = () => {
 }
 
 const HandleUserRouter = (req, res) => {
-
   const method = req.method;
-  if (method === 'GET' && req.path === '/api/user/login') {
-    const username = req.query.username
-    const password = req.query.password
+  if (method === 'POST' && req.path === '/api/user/login') {
+    const username = req.body.username
+    const password = req.body.password
     const result = loginLe(username, password)
 
     return result.then(loginData => {
@@ -31,7 +30,6 @@ const HandleUserRouter = (req, res) => {
         return new ErrorModel('登陆失败')
       }
     })
-
   }
 }
 
