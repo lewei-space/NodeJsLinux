@@ -1,3 +1,5 @@
+const xss = require('xss')
+
 const {mysqlExec} = require('../dataBases/mysql')
 
 const getList = (author, keyWord) => {
@@ -30,10 +32,10 @@ const getDetail = (id) => {
 
 const newBlog = (blogData = {}) => {
 
-  const title = blogData.title
-  const content = blogData.content
-  const author = blogData.author
-  const createtime = blogData.createtime
+  const title = xss(blogData.title)
+  const content = xss(blogData.content)
+  const author = xss(blogData.author)
+  const createtime = xss(blogData.createtime)
 
   const sql = `
   insert into blogs (title,content,author,createtime) 
@@ -66,7 +68,7 @@ const updateBlog = (id, blogData = {}) => {
 }
 
 const deleteBlog = (id, author) => {
-   // 加上author 保证删除的安全
+  // 加上author 保证删除的安全
   const sql = `delete from blogs where id='${id}' and author='${author}'; `
   return mysqlExec(sql).then(deleteData => {
 
