@@ -1,5 +1,9 @@
 const handleBlogRouter = require('./routes/blog')
 const handleUserRouter = require('./routes/user')
+const {access}=require('./utils/log')
+
+const {setSession,getSession}=require('./dataBases/redis')
+
 const QueryString = require('querystring')
 
 const getCookieExpires = () => {
@@ -42,6 +46,9 @@ const getPostData = (req) => {
 }
 
 const serverhanDle = (req, res) => {
+
+   access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)   //写入日志
+
   // 获取path
   req.path = req.url.split('?')[0]
   // 设置返回格式
@@ -62,7 +69,7 @@ const serverhanDle = (req, res) => {
     req.cookie[key] = val
   })
 
-  console.log(req.cookie)
+  // console.log(req.cookie)
 
   // 解析session
   let needSetCookie=false
@@ -118,7 +125,7 @@ const serverhanDle = (req, res) => {
       "Content-type": "text/plain"
     })
 
-    res.write("404 not found\n")
+    res.write("404 Not Found\n")
     res.end()
   })
 }

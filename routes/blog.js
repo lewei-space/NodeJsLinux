@@ -11,6 +11,7 @@ const {SucceccModel, ErrorModel} = require('../model/resModule')
 // 统一登陆验证
 
 const loginInCheck=(req)=>{
+  console.log('req.session.username'+JSON.stringify(req.session))
   if (!req.session.username){
     return Promise.resolve(
       new ErrorModel('尚未登陆')
