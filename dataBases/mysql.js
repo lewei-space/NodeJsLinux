@@ -18,5 +18,6 @@ function mysqlExec(sql) {
   return promise
 }
 module.exports = {
-  mysqlExec
+  mysqlExec,
+  escape:mysql.escape
 }
