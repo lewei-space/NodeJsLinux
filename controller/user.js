@@ -1,8 +1,13 @@
 const {mysqlExec,escape} = require('../dataBases/mysql')
 
+const  {genPassword}=require('../utils/cryp')
+
 const loginLe = (username, password) => {
 
   console.log(username,password)
+  // 生成加密密码
+  password=genPassword(password)
+  
   username=escape(username)
   password=escape(password)
 
